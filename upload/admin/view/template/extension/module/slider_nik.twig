@@ -1,0 +1,253 @@
+{{ header }}
+<style>
+	.d-none {
+		display: none;
+	}
+</style>
+{{ column_left }}
+<div id="content">
+	<div class="page-header">
+		<div class="container-fluid">
+			<div class="pull-right">
+				<button type="submit" form="form-module" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary">
+					<i class="fa fa-save"></i>
+				</button>
+				<a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default">
+					<i class="fa fa-reply"></i>
+				</a>
+			</div>
+			<h1>{{ heading_title }}</h1>
+			<ul class="breadcrumb">
+				{% for breadcrumb in breadcrumbs %}
+					<li>
+						<a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a>
+					</li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+	<div class="container-fluid">
+		{% if error_warning %}
+			<div class="alert alert-danger alert-dismissible">
+				<i class="fa fa-exclamation-circle"></i>
+				{{ error_warning }}
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			</div>
+		{% endif %}
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					<i class="fa fa-pencil"></i>
+					{{ text_edit }}</h3>
+			</div>
+			<div class="panel-body">
+				<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-module" class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="input-name">{{ entry_name }}</label>
+						<div class="col-sm-10">
+							<input type="text" name="name" value="{{ name }}" placeholder="{{ entry_name }}" id="input-name" class="form-control"/>
+							{% if error_name %}
+								<div class="text-danger">{{ error_name }}</div>
+							{% endif %}
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="input-name">{{ entry_setting }}</label>
+						<div class="col-sm-10">
+							<div class="row">
+								<div class="col-sm-6">
+									<label class="control-label" style="margin-bottom: 10px;" for="input-width">{{ entry_width }}</label>
+									<input type="text" name="width" value="{{ width }}" placeholder="{{ entry_width }}" id="input-width" class="form-control"/>
+								</div>
+								<div class="col-sm-6">
+									<label class="control-label" style="margin-bottom: 10px;" for="input-height">{{ entry_height }}</label>
+									<input type="text" name="height" value="{{ height }}" placeholder="{{ entry_height }}" id="input-height" class="form-control"/>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-6">
+									<label class="control-label" style="margin-bottom: 10px;" for="input-effect">{{ entry_effect }}</label>
+									<select name="effect" id="input-effect" class="form-control">
+										<option value="Slide" {% if effect == 'Slide' %} selected="selected" {% endif %}>Slide</option>
+										<option value="Fade" {% if effect == 'Fade' %} selected="selected" {% endif %}>Fade</option>
+										<option value="Cube" {% if effect == 'Cube' %} selected="selected" {% endif %}>Cube</option>
+										<option value="Coverflow" {% if effect == 'Coverflow' %} selected="selected" {% endif %}>Coverflow</option>
+										<option value="Flip" {% if effect == 'Flip' %} selected="selected" {% endif %}>Flip</option>
+									</select>
+								</div>
+								<div class="col-sm-6">
+									<label class="control-label" style="margin-bottom: 10px;" for="input-height">{{ entry_speed }}</label>
+									<input type="text" name="speed" value="{{ speed }}" placeholder="{{ entry_speed }}" id="input-height" class="form-control"/>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-6">
+									<label class="control-label" style="margin-bottom: 10px;" for="input-display-control">{{ entry_display_control }}</label>
+									<select name="display_control" id="input-display-control" class="form-control">
+										<option value="arrows" {% if display_control == 'arrows' %} selected="selected" {% endif %}>Стрелки</option>
+										<option value="thumbs" {% if display_control == 'thumbs' %} selected="selected" {% endif %}>Миниатюры</option>
+										<option value="arrows-thumbs" {% if display_control == 'arrows-thumbs' %} selected="selected" {% endif %}>Стрелки и миниатюры</option>
+									</select>
+								</div>
+								<div class="col-sm-6">
+									<label class="control-label" style="margin-bottom: 10px;" for="input-autoplay">{{ entry_autoplay }}</label>
+									<select name="autoplay" id="input-autoplay" class="form-control">
+										{% if autoplay %}
+											<option value="1" selected="selected">{{ text_enabled }}</option>
+											<option value="0">{{ text_disabled }}</option>
+										{% else %}
+											<option value="1">{{ text_enabled }}</option>
+											<option value="0" selected="selected">{{ text_disabled }}</option>
+										{% endif %}
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="input-name">{{ entry_data_position }}</label>
+						<div class="col-sm-10">
+							<div class="row">
+								<div class="col-sm-6">
+									<label class="control-label" style="margin-bottom: 10px;" for="input-padding-top">{{ entry_padding_top }}</label>
+									<input type="text" name="padding_top" value="{{ padding_top }}" placeholder="{{ entry_padding_top }}" id="input-padding-top" class="form-control"/>
+								</div>
+								<div class="col-sm-6">
+									<label class="control-label" style="margin-bottom: 10px;" for="input-padding-left">{{ entry_padding_left }}</label>
+									<input type="text" name="padding_left" value="{{ padding_left }}" placeholder="{{ entry_padding_left }}" id="input-padding-left" class="form-control"/>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="input-limit">{{ entry_slides_list }}</label>
+						<div
+							class="col-sm-10">
+							{# TODO #}
+							<div class="slides">
+							{% if slides %}
+								{% for slide in slides %}
+									<div class="slide" style="margin-bottom: 15px;">
+										<div class="slide-row" style="width: 100%; border: 1px solid black; padding: 5px 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+											<div class="slide-name">
+												{{ slide.name }}
+											</div>
+											<div class="slide-arrow" style="font-size: 20px; transition: .3s all;">></div>
+										</div>
+										<div class="slide-form d-none">
+											<div class="row">
+												<div class="col-sm-11">
+													<label class="control-label" style="margin-bottom: 10px;" for="input-slide-name">{{ entry_slide_name }}</label>
+													<input type="text" name="slide_name[]" value="{{ slide.name }}" placeholder="{{ entry_slide_name }}" id="input-slide-name" class="form-control"/>
+													<label class="control-label" style="margin-bottom: 10px;" for="input-slide-name">{{ entry_slide_img }}</label>
+													<div style="width: 100%;">
+														<a href="" id="thumb-image" data-toggle="image" class="img-thumbnail">
+															<img src="{{ slide.thumb }}" alt="" title="" data-placeholder="{{ placeholder }}"/>
+														</a>
+														<input type="hidden" name="slide_image[]" value="{{ slide.image }}" id="input-image"/>
+													</div>
+													<label class="control-label" style="margin-bottom: 10px;" for="input-slide-text">{{ entry_slide_text }}</label>
+													<textarea name="slide_text[]" placeholder="{{ entry_slide_text }}" id="input-slide-text" data-toggle="summernote" data-lang="{{ summernote }}" class="form-control">{{ slide.text }}</textarea>
+													<label class="control-label" style="margin-bottom: 10px;" for="input-slide-link">{{ entry_slide_link }}</label>
+													<input type="text" name="slide_link[]" value="{{ slide.link }}" placeholder="{{ entry_slide_link }}" id="input-slide-link" class="form-control"/>
+												</div>
+												<div class="col-sm-1">
+													<span onclick="$(this).parent().parent().parent().parent().remove()" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger" style="margin-top: 35px;">
+														<i class="fa fa-minus-circle"></i>
+													</span>
+												</div>
+											</div>
+										</div>
+									</div>
+								{% endfor %}
+							{% else %}
+								<div class="slide-form">
+									<div class="row">
+										<div class="col-sm-11">
+											<label class="control-label" style="margin-bottom: 10px;" for="input-slide-name">{{ entry_slide_name }}</label>
+											<input type="text" name="slide_name[]" value="{{ slide_name }}" placeholder="{{ entry_slide_name }}" id="input-slide-name" class="form-control"/>
+											<label class="control-label" style="margin-bottom: 10px;" for="input-slide-name">{{ entry_slide_img }}</label>
+											<div style="width: 100%;">
+												<a href="" id="thumb-image" data-toggle="image" class="img-thumbnail"><img src="{{ thumb }}" alt="" title="" data-placeholder="{{ placeholder }}"/></a>
+												<input type="hidden" name="slide_image[]" value="{{ image }}" id="input-image"/>
+											</div>
+											<label class="control-label" style="margin-bottom: 10px;" for="input-slide-text">{{ entry_slide_text }}</label>
+											<textarea name="slide_text[]" placeholder="{{ entry_slide_text }}" id="input-slide-text" data-toggle="summernote" data-lang="{{ summernote }}" class="form-control"></textarea>
+											<label class="control-label" style="margin-bottom: 10px;" for="input-slide-link">{{ entry_slide_link }}</label>
+											<input type="text" name="slide_link[]" value="{{ slide_link }}" placeholder="{{ entry_slide_link }}" id="input-slide-link" class="form-control"/>
+										</div>
+										<div class="col-sm-1">
+											<span onclick="$(this).parent().parent().remove()" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger" style="margin-top: 35px;">
+												<i class="fa fa-minus-circle"></i>
+											</span>
+										</div>
+									</div>
+								</div>
+							{% endif %}
+						</div>
+						<div class="col-sm-offset-11">
+							<span id="add-slide-form" data-toggle="tooltip" title="{{ button_add }}" class="btn btn-primary" style="margin-top: 35px;">
+								<i class="fa fa-plus-circle"></i>
+							</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
+						<div class="col-sm-10">
+							<select name="status" id="input-status" class="form-control">
+								{% if status %}
+									<option value="1" selected="selected">{{ text_enabled }}</option>
+									<option value="0">{{ text_disabled }}</option>
+								{% else %}
+									<option value="1">{{ text_enabled }}</option>
+									<option value="0" selected="selected">{{ text_disabled }}</option>
+								{% endif %}
+							</select>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+<script type="text/javascript" src="view/javascript/summernote/summernote.js"></script>
+<link href="view/javascript/summernote/summernote.css" rel="stylesheet"/>
+<script type="text/javascript" src="view/javascript/summernote/opencart.js"></script>
+
+<script type="text/javascript"><!--
+
+	let imgCounter = 0;
+
+	$('#add-slide-form').on('click', function () {
+		$('.slide-form').append(
+			'<div class="row" style="margin-top: 25px;">' + 
+				'<hr style="border-top: 3px solid #e3e3e3;" />' + 
+				'<div class="col-sm-11">' + 
+					'<label class="control-label" style="margin-bottom: 10px;" for="input-slide-name">{{ entry_slide_name }}</label>' + 
+					'<input type="text" name="slide_name[]" value="" placeholder="{{ entry_slide_name }}" id="input-slide-name" class="form-control" />' +
+					'<label class="control-label" style="margin-bottom: 10px;" for="input-slide-name">{{ entry_slide_img }}</label>' + 
+					'<div style="width: 100%;">' + 
+						'<a href="" id="thumb-image' + imgCounter + '" data-toggle="image" class="img-thumbnail"><img src="{{ placeholder }}" alt="" title="" data-placeholder="{{ placeholder }}" /></a><input type="hidden" name="slide_image[]" value="" id="input-image' + imgCounter + '" />' + 
+					'</div>' + 
+					'<label class="control-label" style="margin-bottom: 10px;" for="input-slide-text">{{ entry_slide_text }}</label>' + 
+					'<textarea name="slide_text[]" placeholder="{{ entry_slide_text }}" id="input-slide-text" data-toggle="summernote" data-lang="{{ summernote }}" class="form-control"></textarea>' + 
+					'<label class="control-label" style="margin-bottom: 10px;" for="input-slide-link">{{ entry_slide_link }}</label>' + 
+					'<input type="text" name="slide_link[]" value="" placeholder="{{ entry_slide_link }}" id="input-slide-link" class="form-control" />' + 
+				'</div>' + 
+				'<div class="col-sm-1">' + 
+					'<span onclick="$(this).parent().parent().remove()" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger" style="margin-top: 35px;"><i class="fa fa-minus-circle"></i></span>' + 
+				'</div>' + 
+			'</div>'
+		);
+		$.getScript('view/javascript/summernote/opencart.js');
+		imgCounter++;
+	})
+
+	$('.slide-row').on('click', function () {
+		$(this).find('.slide-arrow').toggleClass('fa-rotate-90')
+		$(this).parent().find('.slide-form').toggleClass('d-none')
+	})
+
+//--></script></div>
+{{ footer }}

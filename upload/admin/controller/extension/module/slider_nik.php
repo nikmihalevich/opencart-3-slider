@@ -1,24 +1,47 @@
 <?php
-class ControllerExtensionModuleSlider extends Controller {
+class ControllerExtensionModuleSliderNik extends Controller {
 	private $error = array();
 
 	public function index() {
-		$this->load->language('extension/module/slider');
+		$this->load->language('extension/module/slider_nik');
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$this->load->model('setting/module');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-			if (!isset($this->request->get['module_id'])) {
-				$this->model_setting_module->addModule('slider', $this->request->post);
-			} else {
-				$this->model_setting_module->editModule($this->request->get['module_id'], $this->request->post);
+			$module_info = $this->request->post;
+
+			foreach($module_info['slide_name'] as $k => $v) {
+				if(!strlen($v)) {
+					unset($module_info['slide_name'][$k], $module_info['slide_image'][$k], $module_info['slide_text'][$k], $module_info['slide_link'][$k]);
+				}
 			}
 
-//            echo "<pre>";
-//            var_dump($this->request->post);
-//            echo "</pre>";
+			$slides = array();
+
+			foreach($module_info['slide_name'] as $k => $slide) {
+				$slides[] = array(
+					'name'  => $slide,
+					'image' => $module_info['slide_image'][$k],
+					'text'  => $module_info['slide_text'][$k],
+					'link'  => $module_info['slide_link'][$k]
+				);
+			}
+
+			unset($module_info['slide_name'], $module_info['slide_image'], $module_info['slide_text'], $module_info['slide_link']);
+
+			$module_info['slides'] = $slides;
+
+			if (!isset($this->request->get['module_id'])) {
+				$this->model_setting_module->addModule('slider_nik', $module_info);
+			} else {
+				$this->model_setting_module->editModule($this->request->get['module_id'], $module_info);
+			}
+
+        //    echo "<pre>";
+        //    var_dump($module_info);
+        //    echo "</pre>";
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
@@ -64,19 +87,19 @@ class ControllerExtensionModuleSlider extends Controller {
 		if (!isset($this->request->get['module_id'])) {
 			$data['breadcrumbs'][] = array(
 				'text' => $this->language->get('heading_title'),
-				'href' => $this->url->link('extension/module/slider', 'user_token=' . $this->session->data['user_token'], true)
+				'href' => $this->url->link('extension/module/slider_nik', 'user_token=' . $this->session->data['user_token'], true)
 			);
 		} else {
 			$data['breadcrumbs'][] = array(
 				'text' => $this->language->get('heading_title'),
-				'href' => $this->url->link('extension/module/slider', 'user_token=' . $this->session->data['user_token'] . '&module_id=' . $this->request->get['module_id'], true)
+				'href' => $this->url->link('extension/module/slider_nik', 'user_token=' . $this->session->data['user_token'] . '&module_id=' . $this->request->get['module_id'], true)
 			);
 		}
 
 		if (!isset($this->request->get['module_id'])) {
-			$data['action'] = $this->url->link('extension/module/slider', 'user_token=' . $this->session->data['user_token'], true);
+			$data['action'] = $this->url->link('extension/module/slider_nik', 'user_token=' . $this->session->data['user_token'], true);
 		} else {
-			$data['action'] = $this->url->link('extension/module/slider', 'user_token=' . $this->session->data['user_token'] . '&module_id=' . $this->request->get['module_id'], true);
+			$data['action'] = $this->url->link('extension/module/slider_nik', 'user_token=' . $this->session->data['user_token'] . '&module_id=' . $this->request->get['module_id'], true);
 		}
 
 		$data['cancel'] = $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=module', true);
@@ -140,19 +163,23 @@ class ControllerExtensionModuleSlider extends Controller {
         $slides = array();
 
         if(!empty($module_info)) {
-            foreach ($module_info['slide_name'] as $key => $value) {
+            foreach ($module_info['slides'] as $key => $slide) {
                 $slides[] = array(
-                    'name'  => $value,
-                    'thumb' => $this->model_tool_image->resize($module_info['slide_image'][$key], 100, 100),
-                    'link'  => $module_info['slide_link'][$key]
+                    'name'  => $slide['name'],
+                    'thumb' => $slide['image'] ? $this->model_tool_image->resize($slide['image'], 100, 100) : $this->model_tool_image->resize('no_image.png', 100, 100),
+                    'image' => $slide['image'],
+                    'text' => $slide['text'],
+                    'link'  => $slide['link']
                 );
             }
-        }
+		}
+		
+		$data['slides'] = $slides;
 
-        echo "<pre>";
-        var_dump($slides);
-        echo "</pre>";
-
+        // echo "<pre>";
+        // var_dump($module_info);
+		// echo "</pre>";
+		
         if (isset($this->request->post['image']) && is_file(DIR_IMAGE . $this->request->post['image'])) {
             $data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 100, 100);
         } elseif (!empty($product_info) && is_file(DIR_IMAGE . $product_info['image'])) {
@@ -199,11 +226,11 @@ class ControllerExtensionModuleSlider extends Controller {
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');
 
-		$this->response->setOutput($this->load->view('extension/module/slider', $data));
+		$this->response->setOutput($this->load->view('extension/module/slider_nik', $data));
 	}
 
 	protected function validate() {
-		if (!$this->user->hasPermission('modify', 'extension/module/slider')) {
+		if (!$this->user->hasPermission('modify', 'extension/module/slider_nik')) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
