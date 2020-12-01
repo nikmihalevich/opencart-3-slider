@@ -1,73 +1,115 @@
-<div class="swiper-viewport">
-  <div id="slidernik" class="swiper-container">
+<style>
+  .swiper-container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    max-height: {{ height }}px;
+  }
+  .gallery-thumbs {
+    width: fit-content;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 15px;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    top: -50px;
+  }
+  .gallery-thumbs .swiper-slide {
+    height: auto;
+    border: 1px solid #e3e3e3;
+    display: flex;
+    padding: 10px;
+    align-items: flex-start;
+    max-width: 225px;
+    background-color: #fff;
+  }
+  .gallery-thumbs .swiper-slide img {
+    width: 75px;
+  }
+  .gallery-thumbs .swiper-slide span {
+    padding: 5px;
+    margin-left: 10px;
+  }
+</style>
+<div class="swiper-viewport" style="box-shadow: none">
+  <div id="slidernik{{ module }}" class="swiper-container">
     <div class="swiper-wrapper"> 
       {% for slide in slides %}
-        <div class="swiper-slide text-center">
-          {% if slide.link %}
+        <div class="swiper-slide text-center" data-index="{{ slide.index }}">
+
             <div style="background: no-repeat center center url('{{ slide.image }}'); background-size: cover; position: relative; height: {{ height }}px;">
-              <div style="border: 3px solid black; border-radius: 4px; padding: 20px; position: absolute; top: {{ padding_top }}%; left: {{ padding_left }}%; color: black;">
-                <p style="font-size: 45px; font-style: italic; margin-bottom: 45px;">{{ slide.name }}</p>
-                <p style="font-size: 16px; margin-bottom: 100px;">{{ slide.text }}</p>
-                <a href="{{ slide.link }}" target="_blank" style="background-color: black; padding: 10px 15px; font-size: 15px;">
-                  <span style="text-transform: uppercase; color: white;">Shop now</span>
-                </a>
+              <div style="width: 250px; border: 3px solid black; border-radius: 4px; padding: 20px; position: absolute; top: {{ padding_top }}%; left: {{ padding_left }}%; color: black; height: calc({{ height }}px - 20% - {{ padding_top }}%); display: flex; flex-direction: column; justify-content: space-around; align-items: center;">
+                <p style="font-size: 40px; font-style: italic; line-height: 100%;">{{ slide.name }}</p>
+                <p style="font-size: 14px;">{{ slide.text }}</p>
+                {% if slide.link %}
+                  <a href="{{ slide.link }}" target="_blank" style="background-color: black; padding: 10px 15px; font-size: 15px; width: fit-content;">
+                    <span style="text-transform: uppercase; color: white;">Shop now</span>
+                  </a>
+                {% endif %}
               </div>
             </div>
-          {% else %}
-            <img src="{{ slide.image }}" alt="{{ slide.name }}" class="img-responsive" />
-          {% endif %}
         </div>
       {% endfor %} 
     </div>
   </div>
-
-  <div class="swiper-container gallery-thumbs">
-    <div class="swiper-wrapper">
-     {% for slide in slides %}
-      <div class="swiper-slide" style="background-image:url({{slide.thumb}})"></div>
-      {% endfor %} 
+  {% if (display_control == 'arrows' or display_control == 'arrows-thumbs') %}
+    <div class="swiper-pager">
+      <div class="swiper-button-next swiper-button-next{{ module }}"></div>
+      <div class="swiper-button-prev swiper-button-prev{{ module }}"></div>
     </div>
+  {% endif %}
+  {% if (display_control == 'thumbs' or display_control == 'arrows-thumbs') %}
+  <div class="swiper-container gallery-thumbs gallery-thumbs{{ module }}">
+      <div class="swiper-wrapper">
+          {% for slide in slides %}
+              <div class="swiper-slide" data-index="{{ slide.index + 1 }}" style="width: fit-content !important;">
+                <img src="{{slide.thumb}}" alt="">
+                <span>{{ slide.name }}</span>
+              </div>
+          {% endfor %}
+      </div>
   </div>
-  <div class="swiper-pager">
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
-  </div>
+  {% endif %}
 </div>
 
-{# <script src="catalog/view/javascript/jquery/swiper/js/swiper.thumbnails.js" type="text/javascript"></script> #}
 <script type="text/javascript"><!--
+  {% if (display_control == 'thumbs' or display_control == 'arrows-thumbs') %}
+    let galleryThumbs{{ module }} = new Swiper('.gallery-thumbs{{ module }}', {
+        spaceBetween: 10,
+        slidesPerView: 'auto',
+        slideToClickedSlide: true,
+        breakpoints: {
+            // when window width is >= 640px
+            640: {
+                loop: true,
+            }
+        }
+    });
 
-// let galleryThumbs = new Swiper('.gallery-thumbs', {
-//   spaceBetween: 10,
-//   slidesPerView: 4,
-//   loop: true,
-//   freeMode: true,
-//   loopedSlides: 5, //looped slides should be the same
-//   watchSlidesVisibility: true,
-//   watchSlidesProgress: true,
-// });
+    $('.gallery-thumbs{{ module }} .swiper-slide').on('click', function () {
+        mainSwiper{{ module }}.slideTo($(this).data('index'))
+    })
+  {% endif %}
 
-// let Swiper = $('#slidernik').swiper({
-// 	mode: 'horizontal',
-// 	slidesPerView: 1,
-//   pagination: '.slidernik',
-//   loopedSlides: 5, //looped slides should be the same
-// 	paginationClickable: true,
-// 	nextButton: '.swiper-button-next',
-//   prevButton: '.swiper-button-prev',
-//   spaceBetween: 30,
-// 	autoplay: {{speed}} * 1000,
-//   autoplayDisableOnInteraction: true,
-// 	loop: true,
-//   effect: '{{ effect }}',
-//   thumbs: {
-//     swiper: galleryThumbs,
-//   },
-// });
-
-// swiperThumbs(Swiper, {
-//   element: 'swiper-thumbnails',
-//   activeClass: 'is-active'
-// })
+let mainSwiper{{ module }} = new Swiper('#slidernik{{ module }}', {
+    slidesPerView: 1,
+    {% if (display_control == 'arrows' or display_control == 'arrows-thumbs') %}
+    nextButton: '.swiper-button-next{{ module }}',
+    prevButton: '.swiper-button-prev{{ module }}',
+    {% endif %}
+    {% if autoplay %}
+    autoplay: parseInt('{{speed}}') * 1000,
+    {% endif %}
+    autoplayDisableOnInteraction: true,
+    loop: true,
+    effect: '{{ effect }}'.toLowerCase(),
+    {% if (display_control == 'thumbs' or display_control == 'arrows-thumbs') %}
+    thumbs: {
+        swiper: galleryThumbs{{ module }}
+    },
+    {% endif %}
+});
 
 --></script>

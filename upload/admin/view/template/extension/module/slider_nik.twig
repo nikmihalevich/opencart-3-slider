@@ -42,7 +42,7 @@
 			</div>
 			<div class="panel-body">
 				<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-module" class="form-horizontal">
-					<div class="form-group">
+					<div class="form-group required">
 						<label class="col-sm-2 control-label" for="input-name">{{ entry_name }}</label>
 						<div class="col-sm-10">
 							<input type="text" name="name" value="{{ name }}" placeholder="{{ entry_name }}" id="input-name" class="form-control"/>
@@ -58,10 +58,16 @@
 								<div class="col-sm-6">
 									<label class="control-label" style="margin-bottom: 10px;" for="input-width">{{ entry_width }}</label>
 									<input type="text" name="width" value="{{ width }}" placeholder="{{ entry_width }}" id="input-width" class="form-control"/>
+									{% if error_width %}
+										<div class="text-danger">{{ error_width }}</div>
+									{% endif %}
 								</div>
 								<div class="col-sm-6">
 									<label class="control-label" style="margin-bottom: 10px;" for="input-height">{{ entry_height }}</label>
 									<input type="text" name="height" value="{{ height }}" placeholder="{{ entry_height }}" id="input-height" class="form-control"/>
+									{% if error_height %}
+										<div class="text-danger">{{ error_height }}</div>
+									{% endif %}
 								</div>
 							</div>
 							<div class="row">
@@ -122,9 +128,7 @@
 
 					<div class="form-group">
 						<label class="col-sm-2 control-label" for="input-limit">{{ entry_slides_list }}</label>
-						<div
-							class="col-sm-10">
-							{# TODO #}
+						<div class="col-sm-10">
 							<div class="slides">
 							{% if slides %}
 								{% for slide in slides %}
@@ -135,8 +139,8 @@
 											</div>
 											<div class="slide-arrow" style="font-size: 20px; transition: .3s all;">></div>
 										</div>
-										<div class="slide-form d-none">
-											<div class="row">
+										<div class="slide-form">
+											<div class="row d-none">
 												<div class="col-sm-11">
 													<label class="control-label" style="margin-bottom: 10px;" for="input-slide-name">{{ entry_slide_name }}</label>
 													<input type="text" name="slide_name[]" value="{{ slide.name }}" placeholder="{{ entry_slide_name }}" id="input-slide-name" class="form-control"/>
@@ -162,25 +166,27 @@
 									</div>
 								{% endfor %}
 							{% else %}
-								<div class="slide-form">
-									<div class="row">
-										<div class="col-sm-11">
-											<label class="control-label" style="margin-bottom: 10px;" for="input-slide-name">{{ entry_slide_name }}</label>
-											<input type="text" name="slide_name[]" value="{{ slide_name }}" placeholder="{{ entry_slide_name }}" id="input-slide-name" class="form-control"/>
-											<label class="control-label" style="margin-bottom: 10px;" for="input-slide-name">{{ entry_slide_img }}</label>
-											<div style="width: 100%;">
-												<a href="" id="thumb-image" data-toggle="image" class="img-thumbnail"><img src="{{ thumb }}" alt="" title="" data-placeholder="{{ placeholder }}"/></a>
-												<input type="hidden" name="slide_image[]" value="{{ image }}" id="input-image"/>
+								<div class="slide" style="margin-bottom: 15px;">
+									<div class="slide-form">
+										<div class="row">
+											<div class="col-sm-11">
+												<label class="control-label" style="margin-bottom: 10px;" for="input-slide-name">{{ entry_slide_name }}</label>
+												<input type="text" name="slide_name[]" value="{{ slide_name }}" placeholder="{{ entry_slide_name }}" id="input-slide-name" class="form-control"/>
+												<label class="control-label" style="margin-bottom: 10px;" for="input-slide-name">{{ entry_slide_img }}</label>
+												<div style="width: 100%;">
+													<a href="" id="thumb-image" data-toggle="image" class="img-thumbnail"><img src="{{ thumb }}" alt="" title="" data-placeholder="{{ placeholder }}"/></a>
+													<input type="hidden" name="slide_image[]" value="{{ image }}" id="input-image"/>
+												</div>
+												<label class="control-label" style="margin-bottom: 10px;" for="input-slide-text">{{ entry_slide_text }}</label>
+												<textarea name="slide_text[]" placeholder="{{ entry_slide_text }}" id="input-slide-text" data-toggle="summernote" data-lang="{{ summernote }}" class="form-control"></textarea>
+												<label class="control-label" style="margin-bottom: 10px;" for="input-slide-link">{{ entry_slide_link }}</label>
+												<input type="text" name="slide_link[]" value="{{ slide_link }}" placeholder="{{ entry_slide_link }}" id="input-slide-link" class="form-control"/>
 											</div>
-											<label class="control-label" style="margin-bottom: 10px;" for="input-slide-text">{{ entry_slide_text }}</label>
-											<textarea name="slide_text[]" placeholder="{{ entry_slide_text }}" id="input-slide-text" data-toggle="summernote" data-lang="{{ summernote }}" class="form-control"></textarea>
-											<label class="control-label" style="margin-bottom: 10px;" for="input-slide-link">{{ entry_slide_link }}</label>
-											<input type="text" name="slide_link[]" value="{{ slide_link }}" placeholder="{{ entry_slide_link }}" id="input-slide-link" class="form-control"/>
-										</div>
-										<div class="col-sm-1">
-											<span onclick="$(this).parent().parent().remove()" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger" style="margin-top: 35px;">
-												<i class="fa fa-minus-circle"></i>
-											</span>
+											<div class="col-sm-1">
+												<span onclick="$(this).parent().parent().remove()" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger" style="margin-top: 35px;">
+													<i class="fa fa-minus-circle"></i>
+												</span>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -191,6 +197,7 @@
 								<i class="fa fa-plus-circle"></i>
 							</span>
 						</div>
+					</div>
 					</div>
 					<div class="form-group">
 						<label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
@@ -220,24 +227,28 @@
 	let imgCounter = 0;
 
 	$('#add-slide-form').on('click', function () {
-		$('.slide-form').append(
-			'<div class="row" style="margin-top: 25px;">' + 
-				'<hr style="border-top: 3px solid #e3e3e3;" />' + 
-				'<div class="col-sm-11">' + 
-					'<label class="control-label" style="margin-bottom: 10px;" for="input-slide-name">{{ entry_slide_name }}</label>' + 
-					'<input type="text" name="slide_name[]" value="" placeholder="{{ entry_slide_name }}" id="input-slide-name" class="form-control" />' +
-					'<label class="control-label" style="margin-bottom: 10px;" for="input-slide-name">{{ entry_slide_img }}</label>' + 
-					'<div style="width: 100%;">' + 
-						'<a href="" id="thumb-image' + imgCounter + '" data-toggle="image" class="img-thumbnail"><img src="{{ placeholder }}" alt="" title="" data-placeholder="{{ placeholder }}" /></a><input type="hidden" name="slide_image[]" value="" id="input-image' + imgCounter + '" />' + 
-					'</div>' + 
-					'<label class="control-label" style="margin-bottom: 10px;" for="input-slide-text">{{ entry_slide_text }}</label>' + 
-					'<textarea name="slide_text[]" placeholder="{{ entry_slide_text }}" id="input-slide-text" data-toggle="summernote" data-lang="{{ summernote }}" class="form-control"></textarea>' + 
-					'<label class="control-label" style="margin-bottom: 10px;" for="input-slide-link">{{ entry_slide_link }}</label>' + 
-					'<input type="text" name="slide_link[]" value="" placeholder="{{ entry_slide_link }}" id="input-slide-link" class="form-control" />' + 
-				'</div>' + 
-				'<div class="col-sm-1">' + 
-					'<span onclick="$(this).parent().parent().remove()" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger" style="margin-top: 35px;"><i class="fa fa-minus-circle"></i></span>' + 
-				'</div>' + 
+		$('.slides').append(
+			'<div class="slide" style="margin-bottom: 15px;">' +
+				'<div class="slide-form">' +
+					'<div class="row" style="margin-top: 25px;">' +
+						'<hr style="border-top: 3px solid #e3e3e3;" />' +
+						'<div class="col-sm-11">' +
+							'<label class="control-label" style="margin-bottom: 10px;" for="input-slide-name">{{ entry_slide_name }}</label>' +
+							'<input type="text" name="slide_name[]" value="" placeholder="{{ entry_slide_name }}" id="input-slide-name" class="form-control" />' +
+							'<label class="control-label" style="margin-bottom: 10px;" for="input-slide-name">{{ entry_slide_img }}</label>' +
+							'<div style="width: 100%;">' +
+								'<a href="" id="thumb-image' + imgCounter + '" data-toggle="image" class="img-thumbnail"><img src="{{ placeholder }}" alt="" title="" data-placeholder="{{ placeholder }}" /></a><input type="hidden" name="slide_image[]" value="" id="input-image' + imgCounter + '" />' +
+							'</div>' +
+							'<label class="control-label" style="margin-bottom: 10px;" for="input-slide-text">{{ entry_slide_text }}</label>' +
+							'<textarea name="slide_text[]" placeholder="{{ entry_slide_text }}" id="input-slide-text" data-toggle="summernote" data-lang="{{ summernote }}" class="form-control"></textarea>' +
+							'<label class="control-label" style="margin-bottom: 10px;" for="input-slide-link">{{ entry_slide_link }}</label>' +
+							'<input type="text" name="slide_link[]" value="" placeholder="{{ entry_slide_link }}" id="input-slide-link" class="form-control" />' +
+						'</div>' +
+						'<div class="col-sm-1">' +
+							'<span onclick="$(this).parent().parent().remove()" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger" style="margin-top: 35px;"><i class="fa fa-minus-circle"></i></span>' +
+						'</div>' +
+					'</div>' +
+				'</div>' +
 			'</div>'
 		);
 		$.getScript('view/javascript/summernote/opencart.js');
@@ -246,7 +257,7 @@
 
 	$('.slide-row').on('click', function () {
 		$(this).find('.slide-arrow').toggleClass('fa-rotate-90')
-		$(this).parent().find('.slide-form').toggleClass('d-none')
+		$(this).parent().find('.slide-form .row').toggleClass('d-none')
 	})
 
 //--></script></div>

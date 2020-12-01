@@ -39,10 +39,6 @@ class ControllerExtensionModuleSliderNik extends Controller {
 				$this->model_setting_module->editModule($this->request->get['module_id'], $module_info);
 			}
 
-        //    echo "<pre>";
-        //    var_dump($module_info);
-        //    echo "</pre>";
-
 			$this->session->data['success'] = $this->language->get('text_success');
 
 			$this->response->redirect($this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=module', true));
@@ -134,30 +130,6 @@ class ControllerExtensionModuleSliderNik extends Controller {
             $data['display_control'] = '';
         }
 
-        if (isset($this->request->post['autoplay'])) {
-            $data['autoplay'] = $this->request->post['autoplay'];
-        } elseif (!empty($module_info)) {
-            $data['autoplay'] = $module_info['autoplay'];
-        } else {
-            $data['autoplay'] = '';
-        }
-
-        if (isset($this->request->post['padding_top'])) {
-            $data['padding_top'] = $this->request->post['padding_top'];
-        } elseif (!empty($module_info)) {
-            $data['padding_top'] = $module_info['padding_top'];
-        } else {
-            $data['padding_top'] = '';
-        }
-
-        if (isset($this->request->post['padding_left'])) {
-            $data['padding_left'] = $this->request->post['padding_left'];
-        } elseif (!empty($module_info)) {
-            $data['padding_left'] = $module_info['padding_left'];
-        } else {
-            $data['padding_left'] = '';
-        }
-
         $this->load->model('tool/image');
 
         $slides = array();
@@ -175,10 +147,6 @@ class ControllerExtensionModuleSliderNik extends Controller {
 		}
 		
 		$data['slides'] = $slides;
-
-        // echo "<pre>";
-        // var_dump($module_info);
-		// echo "</pre>";
 		
         if (isset($this->request->post['image']) && is_file(DIR_IMAGE . $this->request->post['image'])) {
             $data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 100, 100);
@@ -213,6 +181,30 @@ class ControllerExtensionModuleSliderNik extends Controller {
 		} else {
 			$data['height'] = 200;
 		}
+
+        if (isset($this->request->post['autoplay'])) {
+            $data['autoplay'] = $this->request->post['autoplay'];
+        } elseif (!empty($module_info)) {
+            $data['autoplay'] = $module_info['autoplay'];
+        } else {
+            $data['autoplay'] = 1;
+        }
+
+        if (isset($this->request->post['padding_top'])) {
+            $data['padding_top'] = $this->request->post['padding_top'];
+        } elseif (!empty($module_info)) {
+            $data['padding_top'] = $module_info['padding_top'];
+        } else {
+            $data['padding_top'] = 5;
+        }
+
+        if (isset($this->request->post['padding_left'])) {
+            $data['padding_left'] = $this->request->post['padding_left'];
+        } elseif (!empty($module_info)) {
+            $data['padding_left'] = $module_info['padding_left'];
+        } else {
+            $data['padding_left'] = 5;
+        }
 
 		if (isset($this->request->post['status'])) {
 			$data['status'] = $this->request->post['status'];
