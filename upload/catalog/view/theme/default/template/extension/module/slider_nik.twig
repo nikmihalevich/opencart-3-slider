@@ -1,51 +1,98 @@
 <style>
-  .swiper-container {
+  .swiper-container{{module}} {
     width: 100%;
     margin-left: auto;
     margin-right: auto;
     max-height: {{ height }}px;
   }
-  .gallery-thumbs {
-    width: fit-content;
+  .gallery-thumbs{{module}} {
     max-width: 100%;
     box-sizing: border-box;
     padding: 15px;
-    height: auto;
-    display: flex;
-    justify-content: center;
     position: relative;
-    top: -50px;
+    top: -30px;
   }
-  .gallery-thumbs .swiper-slide {
-    height: auto;
+  .gallery-thumbs{{module}} .swiper-slide {
     border: 1px solid #e3e3e3;
     display: flex;
-    padding: 10px;
-    align-items: flex-start;
+    padding: 5px;
+    align-items: center;
     max-width: 225px;
     background-color: #fff;
+    box-shadow: 1px 1px 10px rgba(122,122,122,0.2);
+  }
+  .gallery-thumbs .swiper-slide .img-container {
+    height: 60px;
   }
   .gallery-thumbs .swiper-slide img {
     width: 75px;
+    height: 100%;
   }
   .gallery-thumbs .swiper-slide span {
     padding: 5px;
     margin-left: 10px;
+    font-size: 14px;
+  }
+  .box-shadow-none {
+    box-shadow: none;
+  }
+  .slide-bg-img{{module}} {
+    background-size: cover !important;
+    background-position: center !important;
+    /*center center*/
+    position: relative;
+    height: {{ height }}px; 
+    padding: {{ padding_top }}px {{ padding_left }}px;
+  }
+  .slide-inner-content{{module}} {
+    max-width: 100%;
+    height: calc({{ height }}px - 100px);
+    text-align: left;
+    color: white;
+    overflow: hidden;
+  }
+  .slide-name {
+    font-size: 30px; 
+    line-height: 100%;
+    font-weight: bolder;
+  }
+  .slide-text {
+    font-size: 16px; 
+    line-height: 7px;
+    margin-bottom: 10px;
+  }
+  .slide-link-button {
+    background-color: red; 
+    padding: 10px 30px; 
+    font-size: 13px; 
+    width: fit-content;
+    display: block;
+  }
+  .slide-link-button__text {
+    text-transform: uppercase; 
+    color: white;
+  }
+  .fit-content {
+    width: fit-content !important;
+  }
+  @media screen and (max-width: 992px) {
+    .gallery-thumbs {
+      display: none;
+    }
   }
 </style>
-<div class="swiper-viewport" style="box-shadow: none">
-  <div id="slidernik{{ module }}" class="swiper-container">
+<div class="swiper-viewport box-shadow-none">
+  <div id="slidernik{{ module }}" class="swiper-container swiper-container{{module}}">
     <div class="swiper-wrapper"> 
       {% for slide in slides %}
         <div class="swiper-slide text-center" data-index="{{ slide.index }}">
-
-            <div style="background: no-repeat center center url('{{ slide.image }}'); background-size: cover; position: relative; height: {{ height }}px;">
-              <div style="width: 250px; border: 3px solid black; border-radius: 4px; padding: 20px; position: absolute; top: {{ padding_top }}%; left: {{ padding_left }}%; color: black; height: calc({{ height }}px - 20% - {{ padding_top }}%); display: flex; flex-direction: column; justify-content: space-around; align-items: center;">
-                <p style="font-size: 40px; font-style: italic; line-height: 100%;">{{ slide.name }}</p>
-                <p style="font-size: 14px;">{{ slide.text }}</p>
+            <div style="background: no-repeat url('{{ slide.image }}');" class="slide-bg-img{{module}}">
+              <div class="slide-inner-content{{module}}">
+                <p class="slide-name">{{ slide.name }}</p>
+                <div class="slide-text">{{ slide.text }}</div>
                 {% if slide.link %}
-                  <a href="{{ slide.link }}" target="_blank" style="background-color: black; padding: 10px 15px; font-size: 15px; width: fit-content;">
-                    <span style="text-transform: uppercase; color: white;">Shop now</span>
+                  <a href="{{ slide.link }}" target="_blank" class="slide-link-button">
+                    <span class="slide-link-button__text">Shop now</span>
                   </a>
                 {% endif %}
               </div>
@@ -62,10 +109,12 @@
   {% endif %}
   {% if (display_control == 'thumbs' or display_control == 'arrows-thumbs') %}
   <div class="swiper-container gallery-thumbs gallery-thumbs{{ module }}">
-      <div class="swiper-wrapper">
+      <div class="swiper-wrapper fit-content">
           {% for slide in slides %}
-              <div class="swiper-slide" data-index="{{ slide.index + 1 }}" style="width: fit-content !important;">
-                <img src="{{slide.thumb}}" alt="">
+              <div class="swiper-slide" data-index="{{ slide.index + 1 }}" class="fit-content">
+                <div class="img-container">
+                  <img src="/image/{{slide.thumb}}" alt="{{ slide.name }}">
+                </div>
                 <span>{{ slide.name }}</span>
               </div>
           {% endfor %}
@@ -80,6 +129,7 @@
         spaceBetween: 10,
         slidesPerView: 'auto',
         slideToClickedSlide: true,
+        freeMode: true, 
         breakpoints: {
             // when window width is >= 640px
             640: {

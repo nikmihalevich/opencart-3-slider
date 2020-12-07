@@ -68,6 +68,24 @@ class ControllerExtensionModuleSliderNik extends Controller {
 			$data['error_height'] = '';
 		}
 
+        if (isset($this->error['speed'])) {
+            $data['error_speed'] = $this->error['speed'];
+        } else {
+            $data['error_speed'] = '';
+        }
+
+        if (isset($this->error['padding_top'])) {
+            $data['error_padding_top'] = $this->error['padding_top'];
+        } else {
+            $data['error_padding_top'] = '';
+        }
+
+        if (isset($this->error['padding_left'])) {
+            $data['error_padding_left'] = $this->error['padding_left'];
+        } else {
+            $data['error_padding_left'] = '';
+        }
+
 		$data['breadcrumbs'] = array();
 
 		$data['breadcrumbs'][] = array(
@@ -135,14 +153,17 @@ class ControllerExtensionModuleSliderNik extends Controller {
         $slides = array();
 
         if(!empty($module_info)) {
+            $imgCouter = 0;
             foreach ($module_info['slides'] as $key => $slide) {
                 $slides[] = array(
+                    'imgCounter' => $imgCouter,
                     'name'  => $slide['name'],
                     'thumb' => $slide['image'] ? $this->model_tool_image->resize($slide['image'], 100, 100) : $this->model_tool_image->resize('no_image.png', 100, 100),
                     'image' => $slide['image'],
                     'text' => $slide['text'],
                     'link'  => $slide['link']
                 );
+                $imgCouter++;
             }
 		}
 		
@@ -163,7 +184,7 @@ class ControllerExtensionModuleSliderNik extends Controller {
 		} elseif (!empty($module_info)) {
 			$data['width'] = $module_info['width'];
 		} else {
-			$data['width'] = 200;
+			$data['width'] = '';
 		}
 
 		if (isset($this->request->post['speed'])) {
@@ -171,7 +192,7 @@ class ControllerExtensionModuleSliderNik extends Controller {
 		} elseif (!empty($module_info)) {
 			$data['speed'] = $module_info['speed'];
 		} else {
-			$data['speed'] = 3;
+			$data['speed'] = '';
 		}
 
 		if (isset($this->request->post['height'])) {
@@ -179,7 +200,7 @@ class ControllerExtensionModuleSliderNik extends Controller {
 		} elseif (!empty($module_info)) {
 			$data['height'] = $module_info['height'];
 		} else {
-			$data['height'] = 200;
+			$data['height'] = '';
 		}
 
         if (isset($this->request->post['autoplay'])) {
@@ -195,7 +216,7 @@ class ControllerExtensionModuleSliderNik extends Controller {
         } elseif (!empty($module_info)) {
             $data['padding_top'] = $module_info['padding_top'];
         } else {
-            $data['padding_top'] = 5;
+            $data['padding_top'] = '';
         }
 
         if (isset($this->request->post['padding_left'])) {
@@ -203,7 +224,7 @@ class ControllerExtensionModuleSliderNik extends Controller {
         } elseif (!empty($module_info)) {
             $data['padding_left'] = $module_info['padding_left'];
         } else {
-            $data['padding_left'] = 5;
+            $data['padding_left'] = '';
         }
 
 		if (isset($this->request->post['status'])) {
@@ -237,6 +258,18 @@ class ControllerExtensionModuleSliderNik extends Controller {
 		if (!$this->request->post['height']) {
 			$this->error['height'] = $this->language->get('error_height');
 		}
+
+        if (!$this->request->post['speed']) {
+            $this->error['speed'] = $this->language->get('error_speed');
+        }
+
+        if (!$this->request->post['padding_top']) {
+            $this->error['padding_top'] = $this->language->get('error_padding_top');
+        }
+
+        if (!$this->request->post['padding_left']) {
+            $this->error['padding_left'] = $this->language->get('error_padding_left');
+        }
 
 		return !$this->error;
 	}

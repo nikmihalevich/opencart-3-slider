@@ -26,7 +26,7 @@ class ControllerExtensionModuleSliderNik extends Controller {
 				if ($slide) {
 					if ($slide['image']) {
 						$image = $this->model_tool_image->resize($slide['image'], $setting['width'], $setting['height']);
-						$thumb = $this->model_tool_image->resize($slide['image'], 75, 75);
+						$thumb = $this->model_tool_image->resize($slide['image'], 1, 1);
 					} else {
 						$image = $this->model_tool_image->resize('placeholder.png', $setting['width'], $setting['height']);
 						$thumb = $this->model_tool_image->resize('placeholder.png', 75, 75);
@@ -35,9 +35,9 @@ class ControllerExtensionModuleSliderNik extends Controller {
 					$data['slides'][] = array(
 					    'index'       => $slides_counter,
 						'name'        => $slide['name'],
-						'text' 		  => utf8_substr(strip_tags(html_entity_decode($slide['text'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('theme_' . $this->config->get('config_theme') . '_product_description_length')) . '..',
+						'text' 		  => html_entity_decode($slide['text']), //utf8_substr(strip_tags(html_entity_decode($slide['text'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('theme_' . $this->config->get('config_theme') . '_product_description_length')) . '..',
 						'image'       => $image,
-						'thumb'       => $thumb,
+						'thumb'       => $slide['image'],
 						'link'        => $slide['link'],
 					);
                     $slides_counter++;
