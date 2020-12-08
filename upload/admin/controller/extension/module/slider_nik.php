@@ -84,7 +84,14 @@ class ControllerExtensionModuleSliderNik extends Controller {
             $data['error_padding_left'] = $this->error['padding_left'];
         } else {
             $data['error_padding_left'] = '';
-        }
+		}
+
+		if (isset($this->error['slide_name'])) {
+            $data['error_slides'] = $this->error['slide_name'];
+        } else {
+            $data['error_slides'] = '';
+		}
+		
 
 		$data['breadcrumbs'] = array();
 
@@ -269,7 +276,17 @@ class ControllerExtensionModuleSliderNik extends Controller {
 
         if (!$this->request->post['padding_left']) {
             $this->error['padding_left'] = $this->language->get('error_padding_left');
-        }
+		}
+		
+		if (!isset($this->request->post['slide_name'])) {
+            $this->error['slide_name'] = $this->language->get('error_slide_name');
+		}
+
+		if (isset($this->request->post['slide_name'])) {
+           if(!$this->request->post['slide_name'][0]) {
+				$this->error['slide_name'] = $this->language->get('error_slide_name');
+		   }
+		}
 
 		return !$this->error;
 	}

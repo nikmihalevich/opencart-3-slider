@@ -79,6 +79,15 @@
     display: flex;
     justify-content: center;
   }
+  .figure-img {
+    height: 75px;
+    margin: 0; 
+  }
+  .figure-img img {
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover;
+  }
   @media screen and (max-width: 992px) {
     .gallery-thumbs {
       display: none;
@@ -116,9 +125,9 @@
       <div class="swiper-wrapper fit-content">
           {% for slide in slides %}
               <div class="swiper-slide" data-index="{{ slide.index + 1 }}" class="fit-content">
-                <div class="img-container">
-                  <img src="/image/{{slide.thumb}}" alt="{{ slide.name }}">
-                </div>
+                <figure class="figure-img">
+                  <img src="/image/{{slide.thumb}}" alt="Рыжая кошка">
+                </figure>
                 <span>{{ slide.name }}</span>
               </div>
           {% endfor %}
