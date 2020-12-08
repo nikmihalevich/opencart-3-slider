@@ -3,7 +3,6 @@
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    max-height: {{ height }}px;
   }
   .gallery-thumbs{{module}} {
     max-width: 100%;
@@ -17,7 +16,7 @@
     display: flex;
     padding: 5px;
     align-items: center;
-    max-width: 225px;
+    width: 225px;
     background-color: #fff;
     box-shadow: 1px 1px 10px rgba(122,122,122,0.2);
   }
@@ -37,19 +36,20 @@
     box-shadow: none;
   }
   .slide-bg-img{{module}} {
-    background-size: cover !important;
-    background-position: center !important;
-    /*center center*/
-    position: relative;
-    height: {{ height }}px; 
-    padding: {{ padding_top }}px {{ padding_left }}px;
+    display: block; 
+    max-width: 100%;
+    height: auto;
+    {# background-size: cover !important; background-position: center !important; position: relative; height: 100%; padding: {{ padding_top }}px {{ padding_left }}px; #}
   }
   .slide-inner-content{{module}} {
     max-width: 100%;
-    height: calc({{ height }}px - 100px);
+    height: calc(100% - {{ padding_top }}px - {{ padding_top }}px);
     text-align: left;
     color: white;
     overflow: hidden;
+    position: absolute;
+    top: {{ padding_top }}px;
+    left: {{ padding_left }}px;
   }
   .slide-name {
     font-size: 30px; 
@@ -75,6 +75,10 @@
   .fit-content {
     width: fit-content !important;
   }
+  .thumbs-slides-center {
+    display: flex;
+    justify-content: center;
+  }
   @media screen and (max-width: 992px) {
     .gallery-thumbs {
       display: none;
@@ -86,7 +90,8 @@
     <div class="swiper-wrapper"> 
       {% for slide in slides %}
         <div class="swiper-slide text-center" data-index="{{ slide.index }}">
-            <div style="background: no-repeat url('{{ slide.image }}');" class="slide-bg-img{{module}}">
+            {# <div style="background: no-repeat url('{{ slide.image }}');" class="slide-bg-img{{module}}"> #}
+              <img src="{{ slide.image }}" class="slide-bg-img{{module}}" alt="">
               <div class="slide-inner-content{{module}}">
                 <p class="slide-name">{{ slide.name }}</p>
                 <div class="slide-text">{{ slide.text }}</div>
@@ -96,7 +101,6 @@
                   </a>
                 {% endif %}
               </div>
-            </div>
         </div>
       {% endfor %} 
     </div>
