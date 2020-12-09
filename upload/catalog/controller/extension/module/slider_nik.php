@@ -26,18 +26,18 @@ class ControllerExtensionModuleSliderNik extends Controller {
 				if ($slide) {
 					if ($slide['image']) {
 						$image = $this->model_tool_image->resize($slide['image'], $setting['width'], $setting['height']);
-						$thumb = $this->model_tool_image->resize($slide['image'], 1, 1);
+						$thumb = $this->resizeToWidth($slide['image'], 300, $setting['width'], $setting['height']);
 					} else {
 						$image = $this->model_tool_image->resize('placeholder.png', $setting['width'], $setting['height']);
-						$thumb = $this->model_tool_image->resize('placeholder.png', 75, 75);
+						$thumb = $this->resizeToWidth('placeholder.png', 300, $setting['width'], $setting['height']);
 					}
 
 					$data['slides'][] = array(
 					    'index'       => $slides_counter,
 						'name'        => $slide['name'],
-						'text' 		  => html_entity_decode($slide['text']), //utf8_substr(strip_tags(html_entity_decode($slide['text'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('theme_' . $this->config->get('config_theme') . '_product_description_length')) . '..',
+						'text' 		  => html_entity_decode($slide['text']),
 						'image'       => $image,
-						'thumb'       => $slide['image'],
+						'thumb'       => $thumb,
 						'link'        => $slide['link'],
 					);
                     $slides_counter++;
@@ -47,8 +47,13 @@ class ControllerExtensionModuleSliderNik extends Controller {
 
         $data['module'] = $module++;
 
-		if ($data['slides']) {
-			return $this->load->view('extension/module/slider_nik', $data);
-		}
+		return $this->load->view('extension/module/slider_nik', $data);
 	}
+
+	protected function resizeToWidth($image, $width, $imageWidth, $imageHeight) {
+        $this->load->model('tool/image');
+        $ratio = $width / $imageWidth;
+        $height = $imageHeight * $ratio;
+        return $this->model_tool_image->resize($image, $width, $height);
+    }
 }

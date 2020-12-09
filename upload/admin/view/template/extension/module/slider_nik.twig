@@ -211,7 +211,7 @@
 
 <script type="text/javascript"><!--
 
-	let imgCounter = 0;
+	let imgCounter = $('input[name=\'slide_image[]\']').length;
 
 	$('#add-slide-form').on('click', function () {
 		$('.slides').append(

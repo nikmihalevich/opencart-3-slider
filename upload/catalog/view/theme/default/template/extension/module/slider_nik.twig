@@ -37,9 +37,8 @@
   }
   .slide-bg-img{{module}} {
     display: block; 
-    max-width: 100%;
+    width: 100%;
     height: auto;
-    {# background-size: cover !important; background-position: center !important; position: relative; height: 100%; padding: {{ padding_top }}px {{ padding_left }}px; #}
   }
   .slide-inner-content{{module}} {
     max-width: 100%;
@@ -124,9 +123,9 @@
   <div class="swiper-container gallery-thumbs gallery-thumbs{{ module }}">
       <div class="swiper-wrapper fit-content">
           {% for slide in slides %}
-              <div class="swiper-slide" data-index="{{ slide.index + 1 }}" class="fit-content">
+              <div class="swiper-slide" data-index="{{ slide.index + 1 }}">
                 <figure class="figure-img">
-                  <img src="/image/{{slide.thumb}}" alt="Рыжая кошка">
+                  <img src="{{slide.thumb}}" alt="{{ slide.name }}">
                 </figure>
                 <span>{{ slide.name }}</span>
               </div>
