@@ -41,7 +41,7 @@
     height: auto;
   }
   .slide-inner-content{{module}} {
-    max-width: 100%;
+    width: calc(100% - {{ padding_left }}px - {{ padding_left }}px);
     height: calc(100% - {{ padding_top }}px - {{ padding_top }}px);
     text-align: left;
     color: white;
@@ -57,7 +57,6 @@
   }
   .slide-text {
     font-size: 16px; 
-    line-height: 7px;
     margin-bottom: 10px;
   }
   .slide-link-button {
