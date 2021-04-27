@@ -1,17 +1,17 @@
 <style>
-  .swiper-container{{module}} {
+  .swiper-container{{ module }} {
     width: 100%;
     margin-left: auto;
     margin-right: auto;
   }
-  .gallery-thumbs{{module}} {
+  .gallery-thumbs{{ module }} {
     max-width: 100%;
     box-sizing: border-box;
     padding: 15px;
     position: relative;
     top: -30px;
   }
-  .gallery-thumbs{{module}} .swiper-slide {
+  .gallery-thumbs{{ module }} .swiper-slide {
     border: 1px solid #e3e3e3;
     display: flex;
     padding: 5px;
@@ -35,20 +35,20 @@
   .box-shadow-none {
     box-shadow: none;
   }
-  .slide-bg-img{{module}} {
+  .swiper-container{{ module }} .slide-bg-img {
     display: block; 
     width: 100%;
     height: auto;
   }
-  .slide-inner-content{{module}} {
-    width: calc(100% - {{ padding_left }}px - {{ padding_left }}px);
-    height: calc(100% - {{ padding_top }}px - {{ padding_top }}px);
+  .swiper-container{{ module }} .slide-inner-content {
+    width: calc(100% - {{ padding_left }}{{ padding_left_unit }} - {{ padding_left }}{{ padding_left_unit }});
+    height: calc(100% - {{ padding_top }}{{ padding_top_unit }} - {{ padding_top }}{{ padding_top_unit }});
     text-align: left;
     color: white;
     overflow: hidden;
     position: absolute;
-    top: {{ padding_top }}px;
-    left: {{ padding_left }}px;
+    top: {{ padding_top }}{{ padding_top_unit }};
+    left: {{ padding_left }}{{ padding_left_unit }};
   }
   .slide-name {
     font-size: 30px; 
@@ -92,46 +92,54 @@
     }
   }
 </style>
-<div class="swiper-viewport box-shadow-none">
-  <div id="slidernik{{ module }}" class="swiper-container swiper-container{{module}}">
-    <div class="swiper-wrapper"> 
-      {% for slide in slides %}
-        <div class="swiper-slide text-center" data-index="{{ slide.index }}">
-            {# <div style="background: no-repeat url('{{ slide.image }}');" class="slide-bg-img{{module}}"> #}
-              <img src="{{ slide.image }}" class="slide-bg-img{{module}}" alt="">
-              <div class="slide-inner-content{{module}}">
-                <p class="slide-name">{{ slide.name }}</p>
-                <div class="slide-text">{{ slide.text }}</div>
-                {% if slide.link %}
-                  <a href="{{ slide.link }}" target="_blank" class="slide-link-button">
-                    <span class="slide-link-button__text">Shop now</span>
-                  </a>
-                {% endif %}
+
+<div class="slider-nik-super">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="swiper-viewport box-shadow-none">
+          <div id="slidernik{{ module }}" class="swiper-container swiper-container{{ module }}">
+            <div class="swiper-wrapper">
+              {% for slide in slides %}
+                <div class="swiper-slide text-center" data-index="{{ slide.index }}">
+                  <img src="{{ slide.image }}" class="slide-bg-img" alt="">
+                  <div class="slide-inner-content">
+                    <p class="slide-name">{{ slide.name }}</p>
+                    <div class="slide-text">{{ slide.text }}</div>
+                    {% if slide.link %}
+                      <a href="{{ slide.link }}" target="_blank" class="slide-link-button">
+                        <span class="slide-link-button__text">{{ button_more }}</span>
+                      </a>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% if (display_control == 'arrows' or display_control == 'arrows-thumbs') %}
+            <div class="swiper-pager">
+              <div class="swiper-button-next swiper-button-next{{ module }}"></div>
+              <div class="swiper-button-prev swiper-button-prev{{ module }}"></div>
+            </div>
+          {% endif %}
+          {% if (display_control == 'thumbs' or display_control == 'arrows-thumbs') %}
+            <div class="swiper-container gallery-thumbs gallery-thumbs{{ module }}">
+              <div class="swiper-wrapper fit-content">
+                {% for slide in slides %}
+                  <div class="swiper-slide" data-index="{{ slide.index + 1 }}">
+                    <figure class="figure-img">
+                      <img src="{{ slide.thumb }}" alt="{{ slide.name }}">
+                    </figure>
+                    <span>{{ slide.name }}</span>
+                  </div>
+                {% endfor %}
               </div>
+            </div>
+          {% endif %}
         </div>
-      {% endfor %} 
-    </div>
-  </div>
-  {% if (display_control == 'arrows' or display_control == 'arrows-thumbs') %}
-    <div class="swiper-pager">
-      <div class="swiper-button-next swiper-button-next{{ module }}"></div>
-      <div class="swiper-button-prev swiper-button-prev{{ module }}"></div>
-    </div>
-  {% endif %}
-  {% if (display_control == 'thumbs' or display_control == 'arrows-thumbs') %}
-  <div class="swiper-container gallery-thumbs gallery-thumbs{{ module }}">
-      <div class="swiper-wrapper fit-content">
-          {% for slide in slides %}
-              <div class="swiper-slide" data-index="{{ slide.index + 1 }}">
-                <figure class="figure-img">
-                  <img src="{{slide.thumb}}" alt="{{ slide.name }}">
-                </figure>
-                <span>{{ slide.name }}</span>
-              </div>
-          {% endfor %}
       </div>
+    </div>
   </div>
-  {% endif %}
 </div>
 
 <script type="text/javascript"><!--

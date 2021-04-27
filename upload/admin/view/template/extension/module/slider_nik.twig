@@ -117,19 +117,43 @@
 						<label class="col-sm-2 control-label" for="input-name">{{ entry_data_position }}</label>
 						<div class="col-sm-10">
 							<div class="row">
-								<div class="col-sm-6">
+								<div class="col-sm-4">
 									<label class="control-label" style="margin-bottom: 10px;" for="input-padding-top">{{ entry_padding_top }}</label>
 									<input type="text" name="padding_top" value="{{ padding_top }}" placeholder="{{ entry_padding_top }}" id="input-padding-top" class="form-control"/>
 									{% if error_padding_top %}
 										<div class="text-danger">{{ error_padding_top }}</div>
 									{% endif %}
 								</div>
-								<div class="col-sm-6">
+								<div class="col-sm-2">
+									<label class="control-label" style="margin-bottom: 10px;" for="input-padding-top-unit">{{ entry_padding_unit }}</label>
+									<select name="padding_top_unit" id="input-padding-top-unit" class="form-control">
+										{% if padding_top_unit == 'px' %}
+											<option value="px" selected="selected">{{ text_pixel }}</option>
+											<option value="%">{{ text_percent }}</option>
+										{% else %}
+											<option value="px">{{ text_pixel }}</option>
+											<option value="%" selected="selected">{{ text_percent }}</option>
+										{% endif %}
+									</select>
+								</div>
+								<div class="col-sm-4">
 									<label class="control-label" style="margin-bottom: 10px;" for="input-padding-left">{{ entry_padding_left }}</label>
 									<input type="text" name="padding_left" value="{{ padding_left }}" placeholder="{{ entry_padding_left }}" id="input-padding-left" class="form-control"/>
 									{% if error_padding_left %}
 										<div class="text-danger">{{ error_padding_left }}</div>
 									{% endif %}
+								</div>
+								<div class="col-sm-2">
+									<label class="control-label" style="margin-bottom: 10px;" for="input-padding-left-unit">{{ entry_padding_unit }}</label>
+									<select name="padding_left_unit" id="input-padding-left-unit" class="form-control">
+										{% if padding_left_unit == 'px' %}
+											<option value="px" selected="selected">{{ text_pixel }}</option>
+											<option value="%">{{ text_percent }}</option>
+										{% else %}
+											<option value="px">{{ text_pixel }}</option>
+											<option value="%" selected="selected">{{ text_percent }}</option>
+										{% endif %}
+									</select>
 								</div>
 							</div>
 						</div>

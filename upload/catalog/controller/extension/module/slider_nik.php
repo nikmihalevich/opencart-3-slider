@@ -52,8 +52,10 @@ class ControllerExtensionModuleSliderNik extends Controller {
 
 	protected function resizeToWidth($image, $width, $imageWidth, $imageHeight) {
         $this->load->model('tool/image');
+
         $ratio = $width / $imageWidth;
         $height = $imageHeight * $ratio;
+
         return $this->model_tool_image->resize($image, $width, $height);
     }
 }

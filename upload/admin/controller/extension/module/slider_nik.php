@@ -91,7 +91,6 @@ class ControllerExtensionModuleSliderNik extends Controller {
         } else {
             $data['error_slides'] = '';
 		}
-		
 
 		$data['breadcrumbs'] = array();
 
@@ -160,17 +159,17 @@ class ControllerExtensionModuleSliderNik extends Controller {
         $slides = array();
 
         if(!empty($module_info)) {
-            $imgCouter = 0;
+            $imgCounter = 0;
             foreach ($module_info['slides'] as $key => $slide) {
                 $slides[] = array(
-                    'imgCounter' => $imgCouter,
+                    'imgCounter' => $imgCounter,
                     'name'  => $slide['name'],
                     'thumb' => $slide['image'] ? $this->model_tool_image->resize($slide['image'], 100, 100) : $this->model_tool_image->resize('no_image.png', 100, 100),
                     'image' => $slide['image'],
                     'text' => $slide['text'],
                     'link'  => $slide['link']
                 );
-                $imgCouter++;
+                $imgCounter++;
             }
 		}
 		
@@ -226,12 +225,28 @@ class ControllerExtensionModuleSliderNik extends Controller {
             $data['padding_top'] = '';
         }
 
+        if (isset($this->request->post['padding_top_unit'])) {
+            $data['padding_top_unit'] = $this->request->post['padding_top_unit'];
+        } elseif (!empty($module_info)) {
+            $data['padding_top_unit'] = $module_info['padding_top_unit'];
+        } else {
+            $data['padding_top_unit'] = '%';
+        }
+
         if (isset($this->request->post['padding_left'])) {
             $data['padding_left'] = $this->request->post['padding_left'];
         } elseif (!empty($module_info)) {
             $data['padding_left'] = $module_info['padding_left'];
         } else {
             $data['padding_left'] = '';
+        }
+
+        if (isset($this->request->post['padding_left_unit'])) {
+            $data['padding_left_unit'] = $this->request->post['padding_left_unit'];
+        } elseif (!empty($module_info)) {
+            $data['padding_left_unit'] = $module_info['padding_left_unit'];
+        } else {
+            $data['padding_left_unit'] = '%';
         }
 
 		if (isset($this->request->post['status'])) {
